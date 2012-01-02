@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "siriproxy-twitter"
-  s.version     = "0.0.3"
+  s.version     = "0.0.4"
   s.authors     = ["netpro2k", "j_mcnally"]
   s.email       = ["netpro2k@gmail.com"]
   s.homepage    = "http://netpro2k.com"
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "twitter"
   s.add_runtime_dependency "sequel"
+  s.add_runtime_dependency "sqlite3"
 
 
   s.add_development_dependency "rspec"
