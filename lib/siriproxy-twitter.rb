@@ -1,10 +1,24 @@
+require 'cora'
+require 'siri_objects'
+require 'pp'
 require 'twitter'
 require 'sequel'
 
 class SiriProxy::Plugin::Twitter < SiriProxy::Plugin
   
   def database
-    @db ||= Sequel.sqlite '../db/twitter.db'
+    
+    @db ||= Sequel.sqlite '/root/.siriproxy/twitter.db'
+  end
+  
+  def createAuthorizationTable
+    database.tables.include?(:authorizations)
+    database.create_table :authorizations do
+    primary_key :id
+    String :phone_identifier
+    String :key
+    String :secret
+  end
   end
   
   def initialize(config = {})
@@ -13,16 +27,22 @@ class SiriProxy::Plugin::Twitter < SiriProxy::Plugin
     ::Twitter.configure do |config|
       config.consumer_key = @config['consumer_key'] 
       config.consumer_secret = @config['consumer_secret']
-      config.oauth_token = @config['oauth_token'] 
-      config.oauth_token_secret = @config['oauth_token_secret']
-    end 
+    end
+    
+    createAuthorizationTable 
 
-    @twitterClient = ::Twitter::Client.new
+  end
+
+  def twitterClient
+    @twitterClient ||= Twitter::Client.new(:oauth_token => provider.token, :oauth_token_secret => provider.token_secret) rescue nil
   end
 
   listen_for /tweet (.+)/i do |tweetText|
+  
+  
+    
     say "Here is your tweet:"
-
+  
     # send a "Preview" of the Tweet
     object = SiriAddViews.new
     object.make_root(last_ref_id)
@@ -37,7 +57,7 @@ class SiriProxy::Plugin::Twitter < SiriProxy::Plugin
       say "Posting to twitter..."
       Thread.new {
         begin
-          @twitterClient.update(tweetText)
+          twitterClient.update(tweetText)
           say "Ok it has been posted."
         rescue Exception
           pp $!
