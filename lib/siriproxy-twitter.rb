@@ -1,6 +1,12 @@
 require 'twitter'
+require 'sequel'
 
 class SiriProxy::Plugin::Twitter < SiriProxy::Plugin
+  
+  def database
+    @db ||= Sequel.sqlite '../db/twitter.db'
+  end
+  
   def initialize(config = {})
     @config = config 
     

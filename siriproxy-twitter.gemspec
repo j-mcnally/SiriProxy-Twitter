@@ -4,7 +4,7 @@ $:.push File.expand_path("../lib", __FILE__)
 Gem::Specification.new do |s|
   s.name        = "siriproxy-twitter"
   s.version     = "0.0.1"
-  s.authors     = ["netpro2k"]
+  s.authors     = ["netpro2k", "j_mcnally"]
   s.email       = ["netpro2k@gmail.com"]
   s.homepage    = "http://netpro2k.com"
   s.summary     = %q{Teach Siri how to tweet}
@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "twitter"
+  s.add_runtime_dependency "sequel"
+
 
   s.add_development_dependency "rspec"
   s.add_development_dependency "guard-rspec"
